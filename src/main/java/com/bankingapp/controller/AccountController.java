@@ -19,6 +19,10 @@ import com.bankingapp.model.User;
 import com.bankingapp.service.AccountService;
 import com.bankingapp.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api")
 public class AccountController {
@@ -29,6 +33,11 @@ public class AccountController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "Create a new account", description = "Creates a new account for the authenticated user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Account created successfully"),
+        @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     @PostMapping("/accounts")
     public ResponseEntity<?> createAccount(Authentication authentication, @RequestParam String accountNumber, @RequestParam String accountType) {
         User user = userService.findByUsername(authentication.getName());
@@ -36,6 +45,11 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
+    @Operation(summary = "Get user accounts", description = "Retrieves all accounts for the authenticated user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Accounts retrieved successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @GetMapping("/accounts")
     public ResponseEntity<?> getUserAccounts(Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
@@ -43,12 +57,22 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
+    @Operation(summary = "Deposit money", description = "Deposit money into the account with the given ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Deposit successful"),
+        @ApiResponse(responseCode = "400", description = "Invalid account or amount")
+    })
     @PostMapping("/accounts/{accountId}/deposit")
     public ResponseEntity<?> deposit(@PathVariable Long accountId, @RequestParam BigDecimal amount) {
         accountService.deposit(accountId, amount);
         return ResponseEntity.ok("Deposit successful");
     }
 
+    @Operation(summary = "Withdraw money", description = "Withdraw money from the account with the given ID.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Withdrawal successful"),
+        @ApiResponse(responseCode = "400", description = "Invalid account or amount")
+    })
     @PostMapping("/accounts/{accountId}/withdraw")
     public ResponseEntity<?> withdraw(@PathVariable Long accountId, @RequestParam BigDecimal amount) {
         accountService.withdraw(accountId, amount);

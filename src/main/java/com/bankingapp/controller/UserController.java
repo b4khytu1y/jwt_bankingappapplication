@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bankingapp.model.User;
 import com.bankingapp.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -17,12 +21,16 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "Register a new user", description = "Registers a new user by providing username and password.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User registered successfully"),
+        @ApiResponse(responseCode = "400", description = "Username is already taken")
+    })
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         if (userService.findByUsername(user.getUsername()) != null) {
             return ResponseEntity.badRequest().body("Username is already taken");
         }
-
         userService.registerNewUser(user.getUsername(), user.getPassword());
         return ResponseEntity.ok("User registered successfully");
     }

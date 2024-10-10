@@ -15,6 +15,10 @@ import com.bankingapp.security.AuthenticationRequest;
 import com.bankingapp.security.AuthenticationResponse;
 import com.bankingapp.security.JwtTokenUtil;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api")
 public class AuthenticationController {
@@ -28,7 +32,11 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-
+    @Operation(summary = "Authenticate a user", description = "Authenticate a user and receive a JWT token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "JWT token generated successfully"),
+        @ApiResponse(responseCode = "401", description = "Invalid username or password")
+    })
     @PostMapping("/authenticate")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest request) throws Exception {
         try {
@@ -44,4 +52,3 @@ public class AuthenticationController {
         return new AuthenticationResponse(jwt);
     }
 }
-
