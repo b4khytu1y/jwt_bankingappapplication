@@ -53,4 +53,5 @@ public class User {
     public boolean isEmpty() {
         throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
     }
+
 }
