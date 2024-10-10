@@ -28,6 +28,7 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+
     @PostMapping("/authenticate")
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest request) throws Exception {
         try {

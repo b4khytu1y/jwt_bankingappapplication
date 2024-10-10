@@ -49,4 +49,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean isEmpty() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'isEmpty'");
+    }
 }
