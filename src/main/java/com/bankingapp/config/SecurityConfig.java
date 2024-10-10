@@ -26,11 +26,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/authenticate", "/register", "/swagger-ui/**").permitAll() // Доступ для всех
+            .requestMatchers("/authenticate", "/register", "/swagger-ui/**", "/h2-console/**").permitAll() // Добавляем доступ к H2-консоли
             .anyRequest().authenticated() // Все остальные запросы требуют авторизации
+            .and()
+            .headers().frameOptions().sameOrigin() // Разрешаем H2 отображаться в iframe
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Без использования сессий
 
+        // Добавляем JWT фильтр
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
