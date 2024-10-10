@@ -12,7 +12,6 @@
 	<artifactId>banking-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>banking-app</name>
-
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -93,8 +92,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>com.bankingapp.BankingAppApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	
 
 </project>
