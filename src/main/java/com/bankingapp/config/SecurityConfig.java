@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.bankingapp.security.CustomUserDetailsService;
 import com.bankingapp.security.JwtRequestFilter;
@@ -32,17 +31,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/authenticate", "/api/register", "/swagger-ui/**", "/h2-console/**").permitAll()
-                        
-                        .anyRequest().authenticated())
-                
-                        .sessionManagement(session -> session.disable())
-                        .httpBasic(basic -> basic.disable())
-                .formLogin(login -> login.disable());
-
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+            http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/authenticate", "/api/register", "/h2-console/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session.disable())
+            .httpBasic(basic -> basic.disable())
+            .formLogin(login -> login.disable());
 
         return http.build();
     }
