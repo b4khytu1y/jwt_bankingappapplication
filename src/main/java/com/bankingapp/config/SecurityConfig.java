@@ -22,22 +22,26 @@ public class SecurityConfig {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+    @SuppressWarnings("removal")
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/authenticate", "/register", "/swagger-ui/**", "/h2-console/**").permitAll() // Добавляем доступ к H2-консоли
-            .anyRequest().authenticated() // Все остальные запросы требуют авторизации
-            .and()
-            .headers().frameOptions().sameOrigin() // Разрешаем H2 отображаться в iframe
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Без использования сессий
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf().disable()
+        .authorizeHttpRequests()
+        .requestMatchers("/h2-console/**").permitAll()
+        .requestMatchers("/authenticate", "/register", "/swagger-ui/**").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .headers().frameOptions().sameOrigin()
+        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .formLogin().disable();
 
-        // Добавляем JWT фильтр
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+}
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
