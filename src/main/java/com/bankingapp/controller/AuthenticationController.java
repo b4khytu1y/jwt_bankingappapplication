@@ -16,6 +16,8 @@ import com.bankingapp.security.AuthenticationResponse;
 import com.bankingapp.security.JwtTokenUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -35,10 +37,19 @@ public class AuthenticationController {
     @Operation(summary = "Authenticate a user", description = "Authenticate a user and receive a JWT token.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "JWT token generated successfully"),
-        @ApiResponse(responseCode = "401", description = "Invalid username or password")
+        @ApiResponse(responseCode = "401", description = "Invalid username or password"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/authenticate")
-    public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest request) throws Exception {
+    public AuthenticationResponse createAuthenticationToken(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "User's login credentials",
+                required = true,
+                content = @Content(
+                    schema = @Schema(implementation = AuthenticationRequest.class)
+                )
+            ) @RequestBody AuthenticationRequest request) throws Exception {
+
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())

@@ -21,6 +21,7 @@ import com.bankingapp.service.AccountService;
 import com.bankingapp.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -37,15 +38,20 @@ public class AccountController {
     @Operation(summary = "Create a new account", description = "Creates a new account for the authenticated user.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Account created successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request")
+        @ApiResponse(responseCode = "400", description = "Bad request"),
+        @ApiResponse(responseCode = "404", description = "User not found")
     })
     @PostMapping("/accounts")
-    public ResponseEntity<?> createAccount(Authentication authentication, @RequestParam String accountNumber, @RequestParam String accountType) {
+    public ResponseEntity<?> createAccount(
+        Authentication authentication, 
+        @Parameter(description = "Unique account number", required = true) @RequestParam String accountNumber,
+        @Parameter(description = "Type of account (SAVINGS, CHECKING, etc.)", required = true) @RequestParam String accountType) {
+        
         Optional<User> optionalUser = userService.findByUsername(authentication.getName());
         
         // Проверяем, если пользователь существует
         if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.status(404).body("User not found");
         }
 
         User user = optionalUser.get(); // Извлекаем пользователя из Optional
@@ -56,7 +62,8 @@ public class AccountController {
     @Operation(summary = "Get user accounts", description = "Retrieves all accounts for the authenticated user.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Accounts retrieved successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized")
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/accounts")
     public ResponseEntity<?> getUserAccounts(Authentication authentication) {
@@ -64,7 +71,7 @@ public class AccountController {
         
         // Проверяем, если пользователь существует
         if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.status(404).body("User not found");
         }
 
         User user = optionalUser.get(); // Извлекаем пользователя из Optional
@@ -75,21 +82,29 @@ public class AccountController {
     @Operation(summary = "Deposit money", description = "Deposit money into the account with the given ID.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Deposit successful"),
-        @ApiResponse(responseCode = "400", description = "Invalid account or amount")
+        @ApiResponse(responseCode = "400", description = "Invalid account or amount"),
+        @ApiResponse(responseCode = "404", description = "Account not found")
     })
     @PostMapping("/accounts/{accountId}/deposit")
-    public ResponseEntity<?> deposit(@PathVariable Long accountId, @RequestParam BigDecimal amount) {
+    public ResponseEntity<?> deposit(
+        @Parameter(description = "Account ID for the deposit", required = true) @PathVariable Long accountId,
+        @Parameter(description = "Amount to deposit", required = true) @RequestParam BigDecimal amount) {
+        
         accountService.deposit(accountId, amount);
         return ResponseEntity.ok("Deposit successful");
     }
 
     @Operation(summary = "Withdraw money", description = "Withdraw money from the account with the given ID.")
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Withdrawal successful"),
-    @ApiResponse(responseCode = "400", description = "Invalid account or amount")
+        @ApiResponse(responseCode = "200", description = "Withdrawal successful"),
+        @ApiResponse(responseCode = "400", description = "Invalid account or amount"),
+        @ApiResponse(responseCode = "404", description = "Account not found")
     })
     @PostMapping("/accounts/{accountId}/withdraw")
-    public ResponseEntity<?> withdraw(@PathVariable Long accountId, @RequestParam BigDecimal amount) {
+    public ResponseEntity<?> withdraw(
+        @Parameter(description = "Account ID for the withdrawal", required = true) @PathVariable Long accountId,
+        @Parameter(description = "Amount to withdraw", required = true) @RequestParam BigDecimal amount) {
+        
         accountService.withdraw(accountId, amount);
         return ResponseEntity.ok("Withdrawal successful");
     }
