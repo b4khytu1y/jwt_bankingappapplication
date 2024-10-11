@@ -65,11 +65,10 @@ mvn clean install
 mvn spring-boot:run
 ```
 **Cкриншоты:**
-1. Пример интерфейса Swagger:
-![2](https://github.com/user-attachments/assets/fc25465a-1be2-43c8-8edc-e2094a0aed1d)
-2. Пример получения JWT ключа:
+1. Пример получения JWT ключа:
 ![1](https://github.com/user-attachments/assets/e593ed03-6130-4c73-aa52-7d048cceccd8)
-
+2. Пример интерфейса Swagger:
+![2](https://github.com/user-attachments/assets/fc25465a-1be2-43c8-8edc-e2094a0aed1d)
 
 ### Swagger UI
 
