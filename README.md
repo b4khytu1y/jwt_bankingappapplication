@@ -31,14 +31,15 @@
 
 1. **Клонирование репозитория**:
    
-   Сначала клонируйте репозиторий с GitHub на ваш локальный компьютер:
-   ```bash
-   git clone https://github.com/your-username/bankingapp.git
-   cd bankingapp
-   
+Сначала клонируйте репозиторий с GitHub на ваш локальный компьютер:
+```bash
+git clone https://github.com/your-username/bankingapp.git
+cd bankingapp
+```
+
 2. **Настройка базы данных (MySQL или H2)**:
 
-   - **MySQL**:
+**MySQL**:
      1. Создайте базу данных `banking_app`, выполнив следующий SQL-запрос в вашей MySQL базе данных:
         ```sql
         CREATE DATABASE banking_app;
@@ -50,24 +51,25 @@
         spring.datasource.password=your-password
         spring.jpa.hibernate.ddl-auto=update
         ```
+        
 3. **Установите зависимости Maven**:
 
-   Для установки всех необходимых зависимостей выполните следующую команду в корневой директории проекта:
-   ```bash
-   mvn clean install
-   ```
+Для установки всех необходимых зависимостей выполните следующую команду в корневой директории проекта:
+```bash
+mvn clean install
+```
 4. **Запустите приложение:**:
 
 Для запуска приложения выполните следующую команду:
-   ```bash
-  mvn spring-boot:run
+```bash
+mvn spring-boot:run
 ```
 **Cкриншоты:**
 1. Пример интерфейса Swagger:
 ![2](https://github.com/user-attachments/assets/fc25465a-1be2-43c8-8edc-e2094a0aed1d)
 
 2. Пример получения JWT ключа:
-![1](https://github.com/user-attachments/assets/7cced3d7-ce5b-4fdb-b1ac-952138b30ab1)
+![1](https://github.com/user-attachments/assets/e593ed03-6130-4c73-aa52-7d048cceccd8)
 
 
 ### Swagger UI
