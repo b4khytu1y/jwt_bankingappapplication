@@ -34,7 +34,7 @@ Banking App — это простое банковское приложение,
    ```bash
    git clone https://github.com/your-username/bankingapp.git
    cd bankingapp
-bash```
+
 2. **Настройте базу данных (MySQL или H2):** 
 
 - Для MySQL:
@@ -45,11 +45,13 @@ bash```
 3. **Установите зависимости Maven:** 
   ```bash
 mvn clean install
-bash```
+
+
 4. **Запустите приложение:** 
   ```bash
 mvn spring-boot:run
-bash```
+
+
 ![1](https://github.com/user-attachments/assets/537a2eaa-97aa-4f4c-87a3-6a7efc15d609)
 
 ![2](https://github.com/user-attachments/assets/1c19c562-ef82-4eed-bf16-d0d147a4991f)
