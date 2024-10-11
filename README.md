@@ -42,14 +42,14 @@ cd bankingapp
 **MySQL**:
      1. Создайте базу данных `banking_app`, выполнив следующий SQL-запрос в вашей MySQL базе данных:
         ```sql
-        CREATE DATABASE banking_app;
+           CREATE DATABASE banking_app;
         ```
      2. Откройте файл `src/main/resources/application.properties` и настройте параметры подключения для MySQL:
         ```properties
-        spring.datasource.url=jdbc:mysql://localhost:3306/banking_app?useSSL=false&serverTimezone=UTC
-        spring.datasource.username=your-username
-        spring.datasource.password=your-password
-        spring.jpa.hibernate.ddl-auto=update
+           spring.datasource.url=jdbc:mysql://localhost:3306/banking_app?useSSL=false&serverTimezone=UTC
+           spring.datasource.username=your-username
+           spring.datasource.password=your-password
+           spring.jpa.hibernate.ddl-auto=update
         ```
         
 3. **Установите зависимости Maven**:
