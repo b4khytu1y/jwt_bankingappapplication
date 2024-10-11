@@ -39,17 +39,17 @@ cd bankingapp
 
 2. **Настройка базы данных (MySQL или H2)**:
 
-**MySQL**:
+- **MySQL**:
      1. Создайте базу данных `banking_app`, выполнив следующий SQL-запрос в вашей MySQL базе данных:
         ```sql
-           CREATE DATABASE banking_app;
+        CREATE DATABASE banking_app;
         ```
      2. Откройте файл `src/main/resources/application.properties` и настройте параметры подключения для MySQL:
         ```properties
-           spring.datasource.url=jdbc:mysql://localhost:3306/banking_app?useSSL=false&serverTimezone=UTC
-           spring.datasource.username=your-username
-           spring.datasource.password=your-password
-           spring.jpa.hibernate.ddl-auto=update
+        spring.datasource.url=jdbc:mysql://localhost:3306/banking_app?useSSL=false&serverTimezone=UTC
+        spring.datasource.username=your-username
+        spring.datasource.password=your-password
+        spring.jpa.hibernate.ddl-auto=update
         ```
         
 3. **Установите зависимости Maven**:
@@ -67,7 +67,6 @@ mvn spring-boot:run
 **Cкриншоты:**
 1. Пример интерфейса Swagger:
 ![2](https://github.com/user-attachments/assets/fc25465a-1be2-43c8-8edc-e2094a0aed1d)
-
 2. Пример получения JWT ключа:
 ![1](https://github.com/user-attachments/assets/e593ed03-6130-4c73-aa52-7d048cceccd8)
 
