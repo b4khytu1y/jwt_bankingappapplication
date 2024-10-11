@@ -70,7 +70,7 @@ mvn spring-boot:run
 2. Пример интерфейса Swagger:
 ![2](https://github.com/user-attachments/assets/fc25465a-1be2-43c8-8edc-e2094a0aed1d)
 
-### Swagger UI
+**Swagger UI**
 
 Документация API доступна через Swagger UI. Вы можете получить доступ по следующему URL:
 ```bash
