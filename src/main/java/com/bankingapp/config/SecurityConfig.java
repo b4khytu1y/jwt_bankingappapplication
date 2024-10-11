@@ -1,5 +1,7 @@
 package com.bankingapp.config;
 
+import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.bankingapp.security.CustomUserDetailsService;
 
@@ -32,24 +37,37 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @SuppressWarnings("removal")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable())  // Отключаем CSRF для API
+            
+            .cors(cors -> corsConfigurationSource())  // Подключаем CORS
+            
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                    "/api/authenticate",
-                    "/api/register",
-                    "/swagger-ui/**",  // Swagger UI доступен
-                    "/v3/api-docs/**",  // Доступ к OpenAPI JSON спецификации
-                    "/h2-console/**"
-                ).permitAll()  // Разрешаем доступ ко всем Swagger ресурсам
-                .anyRequest().authenticated()  // Все остальные запросы требуют аутентификации
+                // Разрешаем доступ ко всем маршрутам без авторизации
+                .requestMatchers("/**").permitAll()
             )
-            .sessionManagement(session -> session.disable())
-            .httpBasic(basic -> basic.disable())
-            .formLogin(login -> login.disable());
+            
+            .sessionManagement(session -> session.disable())  // Отключаем сессии
+            
+            .httpBasic(basic -> basic.disable())  // Отключаем базовую авторизацию
+            .formLogin(login -> login.disable());  // Отключаем форму логина
+
+        http.headers(headers -> headers.frameOptions().disable());  // Разрешаем использование фреймов (для H2-консоли)
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));  // Разрешаем запросы с любых источников
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

@@ -2,6 +2,7 @@ package com.bankingapp.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,14 @@ public class AccountController {
     })
     @PostMapping("/accounts")
     public ResponseEntity<?> createAccount(Authentication authentication, @RequestParam String accountNumber, @RequestParam String accountType) {
-        User user = userService.findByUsername(authentication.getName());
+        Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+        
+        // Проверяем, если пользователь существует
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        User user = optionalUser.get(); // Извлекаем пользователя из Optional
         Account account = accountService.createAccount(user, accountNumber, AccountType.valueOf(accountType));
         return ResponseEntity.ok(account);
     }
@@ -52,7 +60,14 @@ public class AccountController {
     })
     @GetMapping("/accounts")
     public ResponseEntity<?> getUserAccounts(Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
+        Optional<User> optionalUser = userService.findByUsername(authentication.getName());
+        
+        // Проверяем, если пользователь существует
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        User user = optionalUser.get(); // Извлекаем пользователя из Optional
         List<Account> accounts = accountService.getAccountsByUserId(user.getId());
         return ResponseEntity.ok(accounts);
     }
@@ -70,8 +85,8 @@ public class AccountController {
 
     @Operation(summary = "Withdraw money", description = "Withdraw money from the account with the given ID.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Withdrawal successful"),
-        @ApiResponse(responseCode = "400", description = "Invalid account or amount")
+    @ApiResponse(responseCode = "200", description = "Withdrawal successful"),
+    @ApiResponse(responseCode = "400", description = "Invalid account or amount")
     })
     @PostMapping("/accounts/{accountId}/withdraw")
     public ResponseEntity<?> withdraw(@PathVariable Long accountId, @RequestParam BigDecimal amount) {

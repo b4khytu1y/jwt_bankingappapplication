@@ -22,7 +22,7 @@ public class AccountService {
         account.setUser(user);
         account.setAccountNumber(accountNumber);
         account.setAccountType(accountType);
-        account.setBalance(BigDecimal.ZERO);  // Начальный баланс — 0
+        account.setBalance(BigDecimal.ZERO);
         return accountRepository.save(account);
     }
 
