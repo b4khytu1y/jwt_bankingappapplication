@@ -1,7 +1,7 @@
-package com.bankingapp.model;
+    package com.bankingapp.model;
 
-public enum AccountType {
-    CHECKING,
-    SAVING,
-    FIXED
-}
+    public enum AccountType {
+        CHECKING,
+        SAVING,
+        FIXED
+    }

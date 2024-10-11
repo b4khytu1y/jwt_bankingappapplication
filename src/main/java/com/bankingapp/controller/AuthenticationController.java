@@ -11,7 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bankingapp.security.AuthenticationRequest;
+import com.bankingapp.security.AuthenticationResponse;
 import com.bankingapp.security.JwtTokenUtil;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api")
@@ -26,8 +34,22 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Operation(summary = "Authenticate a user", description = "Authenticate a user and receive a JWT token.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "JWT token generated successfully"),
+        @ApiResponse(responseCode = "401", description = "Invalid username or password"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @PostMapping("/authenticate")
-    public String createAuthenticationToken(@RequestBody AuthenticationRequest request) throws Exception {
+    public AuthenticationResponse createAuthenticationToken(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                description = "User's login credentials",
+                required = true,
+                content = @Content(
+                    schema = @Schema(implementation = AuthenticationRequest.class)
+                )
+            ) @RequestBody AuthenticationRequest request) throws Exception {
+
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -38,28 +60,6 @@ public class AuthenticationController {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         final String jwt = jwtTokenUtil.generateToken(userDetails.getUsername());
-        return jwt;
+        return new AuthenticationResponse(jwt);
     }
 }
-
-class AuthenticationRequest {
-    private String username;
-    private String password;
-
-    // Геттеры и сеттеры
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    }
-
